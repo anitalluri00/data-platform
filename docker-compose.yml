@@ -1,8 +1,8 @@
-version: '3.8'
-
 services:
   data-platform:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8501:8501"
     environment:
@@ -13,6 +13,8 @@ services:
       - ./data:/app/data
       - ./reports:/app/reports
       - ./logs:/app/logs
+    depends_on:
+      - mysql
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
@@ -31,8 +33,11 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
 volumes:
   mysql_data:
