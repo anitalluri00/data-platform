@@ -6,10 +6,12 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
-    software-properties-common \
     git \
-    default-libmysqlclient-dev \
     pkg-config \
+    default-mysql-client \
+    libmysqlclient-dev \
+    gcc \
+    g++ \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
